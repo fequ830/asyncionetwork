@@ -54,7 +54,7 @@ def handle_IAMAT(input_line):
     if timestamp_difference >= 0:
         timestamp_difference = f"+{timestamp_difference}" #add + if diff is positive
     # else:
-    #     timestamp_difference = f"-{timestamp_difference}" #FIXME: IF ITS NEGATIVE IT ALREADY HAS A NEG SIGN, NO NEED TO ADD ANOTHER????
+    #     timestamp_difference = f"-{timestamp_difference}"
 
     response = f"AT {serverID} {timestamp_difference} {terms[1]} {terms[2]} {terms[3]}"
     return response
@@ -166,7 +166,6 @@ async def handle_connection(reader, writer):
                 
                 #if the new message received has the same timestamp than the most recent saved one, then it's the same. 
                 if float(clients_to_latest_timestamp[parsed_input[3]]) == float(parsed_input[5]):
-                    #FIXME: SHOULD THIS RETURN THE MESSAGE + ? TO THE CLIENT????????
                     print(f"Input (will not propagated because it's been propagated already): {line_received}")
                     ok_to_propagate = False
 
@@ -175,7 +174,6 @@ async def handle_connection(reader, writer):
                 clients_to_latest_timestamp[parsed_input[3]] = parsed_input[5]
 
                 # print(f"Acknowledged as AT message. Will attempt to propagate this, if not already propagated: {result_parsed_line}")
-                # writer.write(result_parsed_line.encode()) #FIXME: SHOULD AN AT REQUEST BE PRINTED TO THE CLIENT?
                 # await writer.drain()
                 print(f"Output (to servers): {result_parsed_line}")
                 await propagate_servers(result_parsed_line)
